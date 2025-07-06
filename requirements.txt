@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+streamlit
+langchain
+google-generativeai
+httpx
+loguru
+pydantic
+python-dotenv
+pdfminer.six
