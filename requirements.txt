@@ -8,3 +8,4 @@ loguru
 pydantic
 python-dotenv
 pdfminer.six
+streamlit_lottie
