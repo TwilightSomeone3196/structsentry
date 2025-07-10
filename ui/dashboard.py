@@ -8,13 +8,13 @@ from app.utils import render_xrd_chart, generate_pdf_report
 # === SETUP ===
 st.set_page_config(page_title="StructSentry", layout="wide", page_icon="🧪")
 
-def load_lottieurl(url: str):
-    res = rqs.get(url)
-    if res.status_code != 200:
+def load_lottie_local(filepath: str):
+    try:
+        return json.loads(Path(filepath).read_text(encoding="utf-8"))
+    except Exception:
         return None
-    return res.json()
 
-lottie_bot = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_bhw1ul4g.json")
+lottie_bot = load_lottie_local("animation.json")
 
 # === CUSTOM STYLING ===
 st.markdown("""
