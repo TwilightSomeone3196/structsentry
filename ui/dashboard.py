@@ -14,7 +14,7 @@ def load_lottie_local(filepath: str):
     except Exception:
         return None
 
-lottie_bot = load_lottie_local("animation.json")
+lottie_bot = load_lottie_local("ui/animation.json")
 
 # === CUSTOM STYLING ===
 st.markdown("""
