@@ -15,18 +15,24 @@ def get_llm():
 
 def recommend_structures(structure: str, notes: str, language: str):
     prompt = ChatPromptTemplate.from_template("""
-Given the material structure type: {structure},
-provide recommended:
+You are an AI assistant trained in materials science.
 
-1. Candidate materials
-2. Suggested processing (e.g., sintering, annealing, doping)
-3. Common applications
+Given the identified structure type: {structure}, return:
 
-Notes:
-{notes}
+1. Three candidate materials (e.g., metals or alloys)
+2. Suggested processing techniques (e.g., annealing, sintering)
+3. Typical applications
 
-Respond concisely in {language}, return only plain text.
+Be concise and format the result clearly for a technical audience. Use the notes below if relevant.
+
+Structure: {structure}
+Notes: {notes}
+Language: {language}
 """)
 
     chain = prompt | get_llm()
-    return chain.invoke({"structure": structure, "notes": notes, "language": language})
+    return chain.invoke({
+        "structure": structure,
+        "notes": notes,
+        "language": language
+    })
