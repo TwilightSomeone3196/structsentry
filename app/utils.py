@@ -1,3 +1,20 @@
+import os
+import logging
+from langchain.callbacks.tracers import LangChainTracer
+from langchain.globals import set_tracer
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Setup LangSmith tracer
+if os.getenv("LANGCHAIN_API_KEY") and os.getenv("LANGCHAIN_PROJECT"):
+    tracer = LangChainTracer()
+    set_tracer(tracer)
+    logger.info("LangSmith tracing enabled.")
+else:
+    logger.warning("LangSmith not configured. Set LANGCHAIN_API_KEY and LANGCHAIN_PROJECT.")
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
