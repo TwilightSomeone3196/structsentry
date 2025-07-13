@@ -1,38 +1,31 @@
-import os
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.prompts import ChatPromptTemplate
-from dotenv import load_dotenv
+def generate_recommendations(decoded_data, language="english"):
+    """
+    Generates recommendations based on decoded XRD data.
+    Output is localized based on selected language.
+    """
 
-load_dotenv()
+    if not decoded_data:
+        return ["No data provided."]
 
-def get_llm():
-    return ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
-        temperature=0.3,
-        google_api_key=os.getenv("GEMINI_API_KEY"),
-        model_kwargs={"stream": False}
-    )
+    avg_intensity = sum([p["intensity"] for p in decoded_data]) / len(decoded_data)
+    recommendations = []
 
-def recommend_structures(structure: str, notes: str, language: str):
-    prompt = ChatPromptTemplate.from_template("""
-You are an AI assistant trained in materials science.
+    if avg_intensity > 300:
+        recommendations.append("Use high-temperature synthesis to maintain crystallinity.")
+        recommendations.append("Consider doping to tune properties.")
+    elif avg_intensity > 150:
+        recommendations.append("Anneal sample to improve structural order.")
+        recommendations.append("Re-run measurement at slower scan rate.")
+    else:
+        recommendations.append("Check sample purity and measurement settings.")
+        recommendations.append("Consider different synthesis technique.")
 
-Given the identified structure type: {structure}, return:
+    # Simple language translation (placeholder)
+    if language == "urdu":
+        recommendations = [f"[اردو] {r}" for r in recommendations]
+    elif language == "french":
+        recommendations = [f"[Français] {r}" for r in recommendations]
+    elif language == "german":
+        recommendations = [f"[Deutsch] {r}" for r in recommendations]
 
-1. Three candidate materials (e.g., metals or alloys)
-2. Suggested processing techniques (e.g., annealing, sintering)
-3. Typical applications
-
-Be concise and format the result clearly for a technical audience. Use the notes below if relevant.
-
-Structure: {structure}
-Notes: {notes}
-Language: {language}
-""")
-
-    chain = prompt | get_llm()
-    return chain.invoke({
-        "structure": structure,
-        "notes": notes,
-        "language": language
-    })
+    return recommendations
