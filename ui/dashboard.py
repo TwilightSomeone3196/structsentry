@@ -3,7 +3,6 @@ from app.utils import render_xrd_chart, generate_pdf_report
 from app.xrd_decoder import decode_xrd
 from app.struct_evaluator import evaluate_structure
 from app.recommender import generate_recommendations
-import io
 from fpdf import FPDF
 
 st.set_page_config(page_title="StructSentry", layout="centered")
@@ -32,7 +31,7 @@ def display_outputs(data, language, filename):
     for rec in recommendations:
         st.markdown(f"- {rec}")
 
-    # Auto-generate downloadable PDF
+    # Generate in-memory PDF
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
@@ -52,13 +51,10 @@ def display_outputs(data, language, filename):
     for rec in recommendations:
         pdf.cell(200, 8, txt=f"- {rec}", ln=1)
 
-    buf = io.BytesIO()
-    pdf.output(buf)
-    buf.seek(0)
-
+    pdf_bytes = pdf.output(dest="S").encode("latin-1")
     st.download_button(
         label="⬇️ Download Report",
-        data=buf,
+        data=pdf_bytes,
         file_name=filename,
         mime="application/pdf"
     )
